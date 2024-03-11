@@ -102,6 +102,21 @@ func decideVersion(ctx context.Context, baseDir string) (string, error) {
 			}
 			return gomod.Go.Version, nil
 		}
+		if goworkFile, err := os.Open(filepath.Join(directory, "go.work")); err == nil {
+			bytes, err := io.ReadAll(goworkFile)
+			if err != nil {
+				return "", err
+			}
+			goworkFile.Close()
+
+			gowork, err := modfile.ParseWork(goworkFile.Name(), bytes, nil)
+			if err != nil {
+				return "", err
+			}
+
+			debugf(ctx, "use go.work")
+			return gowork.Go.Version, nil
+		}
 		if directory == "/" {
 			v, err := globalVersion()
 			if err != nil {

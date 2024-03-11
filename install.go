@@ -50,9 +50,9 @@ func Install(ctx context.Context, args []string) error {
 	}
 	debugf(ctx, "use %s", nodeBasePath)
 
-	commandArgs := slices.Concat([]string{"install", "-g"}, args)
-	infof(ctx, "npm %s", strings.Join(commandArgs, " "))
-	cmd := exec.CommandContext(ctx, filepath.Join(baseDir, "versions", nodeBasePath, "bin", "npm"), commandArgs...)
+	commandArgs := slices.Concat([]string{"install"}, args)
+	infof(ctx, "go %s", strings.Join(commandArgs, " "))
+	cmd := exec.CommandContext(ctx, filepath.Join(baseDir, "versions", nodeBasePath, "bin", "go"), commandArgs...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
