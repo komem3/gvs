@@ -114,8 +114,10 @@ func decideVersion(ctx context.Context, baseDir string) (string, error) {
 				return "", err
 			}
 
-			debugf(ctx, "use go.work")
-			return gowork.Go.Version, nil
+			if gowork.Go != nil {
+				debugf(ctx, "use go.work")
+				return gowork.Go.Version, nil
+			}
 		}
 		if directory == "/" {
 			v, err := globalVersion()
