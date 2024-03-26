@@ -7,21 +7,22 @@ GVS automatically determines and executes only the main Go version, but GVS does
 ```
 go install github.com/komem3/gvs@latest
 
-nvs init
+gvs init
 
 # Add PATH
 # export PATH="$HOME/.gvs/bin:$PATH"
 
-nvs use 1.22
-go --version
+gvs use 1.22
+go version
 ```
 
 ## Version Determination
 
 1. read `.go-version` in current path.
-2. read `go` field of `go.mod` in current path.
-3. go to the parent directory. Back to 1. If there are no more parents, Go to 4.
-4. read global version file(`$HOME/.gvs/version`)
+2. read `go` field of `go.work` in current path.
+3. read `go` field of `go.mod` in current path.
+4. go to the parent directory. Back to 1. If there are no more parents, Go to 5.
+5. read global version file(`$HOME/.gvs/version`)
 
 ## Install Global Tool
 
