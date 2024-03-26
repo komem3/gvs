@@ -84,6 +84,23 @@ func decideVersion(ctx context.Context, baseDir string) (string, error) {
 			}
 			return strings.TrimRight(string(b), "\n"), nil
 		}
+		if goworkFile, err := os.Open(filepath.Join(directory, "go.work")); err == nil {
+			bytes, err := io.ReadAll(goworkFile)
+			if err != nil {
+				return "", err
+			}
+			goworkFile.Close()
+
+			gowork, err := modfile.ParseWork(goworkFile.Name(), bytes, nil)
+			if err != nil {
+				return "", err
+			}
+
+			if gowork.Go != nil {
+				debugf(ctx, "use go.work")
+				return gowork.Go.Version, nil
+			}
+		}
 		if gomodFile, err := os.Open(filepath.Join(directory, "go.mod")); err == nil {
 			bytes, err := io.ReadAll(gomodFile)
 			if err != nil {
@@ -100,23 +117,8 @@ func decideVersion(ctx context.Context, baseDir string) (string, error) {
 			if gomod.Toolchain != nil {
 				return strings.TrimLeft(gomod.Toolchain.Name, "go"), nil
 			}
-			return gomod.Go.Version, nil
-		}
-		if goworkFile, err := os.Open(filepath.Join(directory, "go.work")); err == nil {
-			bytes, err := io.ReadAll(goworkFile)
-			if err != nil {
-				return "", err
-			}
-			goworkFile.Close()
-
-			gowork, err := modfile.ParseWork(goworkFile.Name(), bytes, nil)
-			if err != nil {
-				return "", err
-			}
-
-			if gowork.Go != nil {
-				debugf(ctx, "use go.work")
-				return gowork.Go.Version, nil
+			if gomod.Go != nil {
+				return gomod.Go.Version, nil
 			}
 		}
 		if directory == "/" {
