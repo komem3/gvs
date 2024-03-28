@@ -4,9 +4,10 @@ GVS automatically determines and executes only the main Go version, but GVS does
 
 ## Install
 
-```
-go install github.com/komem3/gvs@latest
+1. Download binary from [releases](https://github.com/komem3/gvs/releases) and create path.
+2. Run the following command.
 
+```
 gvs init
 
 # Add PATH
