@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"slices"
-	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -44,15 +43,14 @@ func Install(ctx context.Context, args []string) error {
 	if err != nil {
 		return err
 	}
-	nodeBasePath, err := findLocalVersion(baseDir, parsedVersion)
+	goBasePath, err := findLocalVersion(baseDir, parsedVersion)
 	if err != nil {
 		return err
 	}
-	debugf(ctx, "use %s", nodeBasePath)
 
 	commandArgs := slices.Concat([]string{"install"}, args)
-	infof(ctx, "go %s", strings.Join(commandArgs, " "))
-	cmd := exec.CommandContext(ctx, filepath.Join(baseDir, "versions", nodeBasePath, "bin", "go"), commandArgs...)
+	infof(ctx, "use %s", goBasePath)
+	cmd := exec.CommandContext(ctx, filepath.Join(baseDir, "versions", goBasePath, "bin", "go"), commandArgs...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
